@@ -1,0 +1,17 @@
+<!-- users/register.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Реєстрація вчителя</title>
+</head>
+{% block content %}
+<h2>Student Registration</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Register</button>
+</form>
+{% endblock %}
+</body>
+</html>

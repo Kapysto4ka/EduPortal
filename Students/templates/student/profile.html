@@ -1,0 +1,175 @@
+{% load static %}
+{% load custom_filters %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'student/styles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .profile-card {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .profile-card p {
+            font-size: 16px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-card i {
+            margin-right: 10px;
+            color: #007bff;
+            font-size: 18px;
+        }
+
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+        }
+
+        .btn-change-avatar {
+            margin: auto;
+            display: flex;
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        strong{
+            padding-right: 5px;
+        }
+        .profile-btn {
+            border: none;
+        }
+    </style>
+    <title>Profile</title>
+</head>
+<body>
+  <div class="app-container">
+      <div class="app-header">
+          <div class="app-header-left">
+            <img src="https://kep.nung.edu.ua/static/img/fullLogo.svg" class="logo" alt="Logo">
+              <p class="app-name">Особистий кабінет</p>
+              <div class="search-wrapper">
+                  <input class="search-input" type="text" placeholder="Search">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="feather feather-search" viewBox="0 0 24 24">
+                      <circle cx="11" cy="11" r="8"></circle>
+                      <path d="M21 21l-4.35-4.35"></path>
+                  </svg>
+              </div>
+          </div>
+          <div class="app-header-right">
+              <button class="mode-switch" title="Switch Theme">
+                  <svg class="moon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="24" height="24" viewBox="0 0 24 24">
+                      <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                  </svg>
+              </button>
+              <button class="profile-btn" onclick="location.href='{% url 'students:user_profile' request.user.id %}'">
+                  <div>{{ request.user.student.first_name }} {{ request.user.student.last_name }}</div>
+                  {% if request.user.student.avatar %}
+                    <img src="{{ request.user.student.avatar.url }}" class="avatar" />
+                    {% else %}
+                        <img src="https://png.pngtree.com/png-vector/20220817/ourmid/pngtree-man-avatar-with-circle-frame-vector-ilustration-png-image_6110328.png" class="avatar" />
+                    {% endif %}
+              </button>
+          </div>
+      </div>
+      <div class="app-content">
+          <div class="projects-section">
+              <div class="projects-section-header">
+                  <a href="{% url 'students:index' %}" class="btn btn-primary">Повернутись назад</a>
+              </div>
+              <div class="profile-card">
+                {% if student.avatar %}
+                <img src="{{ student.avatar.url }}" alt="Avatar" class="avatar">
+                {% else %}
+                    <img src="https://png.pngtree.com/png-vector/20220817/ourmid/pngtree-man-avatar-with-circle-frame-vector-ilustration-png-image_6110328.png" alt="Avatar" class="avatar">
+                {% endif %}
+                  <button class="btn-change-avatar" onclick="document.getElementById('avatarModal').style.display='block'">Змінити аватар</button>
+                  <p><i class="fas fa-envelope"></i> <strong>Ім'я та фамілія: </strong> {{ request.user.student.first_name }} {{ request.user.student.last_name }}</p>
+                  <p><i class="fas fa-envelope"></i> <strong>Email:</strong> {{ student.user.email }}</p>
+                  <p><i class="fas fa-phone"></i> <strong>Номер телефону:</strong> {{ student.phone_number }}</p>
+                  <p><i class="fas fa-users"></i> <strong>Група:</strong> {{ student.group.name }}</p>
+                  <p><i class="fas fa-birthday-cake"></i> <strong>Дата народження:</strong> {{ student.date_of_birth }}</p>
+                  <p><i class="fas fa-map-marker-alt"></i> <strong>Адреса проживання:</strong> {{ student.address }}</p>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <div id="avatarModal" class="modal">
+      <div class="modal-content">
+          <span class="close" onclick="document.getElementById('avatarModal').style.display='none'">&times;</span>
+          <form action="{% url 'students:change_avatar' %}" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <h2>Змінити аватар</h2>
+              {{ form.as_p }}
+              <input type="file" name="avatar" required>
+              <button type="submit" class="btn-change-avatar">Зберегти</button>
+          </form>
+      </div>
+  </div>
+
+  <script>
+      var modal = document.getElementById("avatarModal");
+      window.onclick = function(event) {
+          if (event.target == modal) {
+              modal.style.display = "none";
+          }
+      }
+  </script>
+</body>
+</html>

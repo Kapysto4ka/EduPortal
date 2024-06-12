@@ -1,0 +1,22 @@
+{% extends "teacher/template.html" %}
+{% load custom_filters %}
+
+{% block title %}Панель вчителя{% endblock %}
+
+{% block content %}
+<div class="projects-section-header">
+    <p>Керування групами</p>
+    <p class="time">{{ current_date|date:"j" }} {{ current_date|ukr_month }}</p>
+</div>
+{% for group in groups %}
+<div class="project-box-wrapper" data-group-id="{{ group.id }}">
+    <div class="project-box" style="background-color: #e9e7fd;">
+        <div class="project-box-header"></div>
+        <div class="project-box-content-header">
+            <p class="box-content-header">{{ group.name }}</p>
+            <p class="box-content-subheader">К-ть студентів: {{ group.student_count }}</p>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

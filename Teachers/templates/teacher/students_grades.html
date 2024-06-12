@@ -1,0 +1,106 @@
+{% extends "teacher/template.html" %}
+{% load static %}
+{% load custom_filters %}
+{% block style %}<style>
+form {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+        .projects-section form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .projects-section form select, form button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fff;
+            color: #333;
+        }
+
+        .projects-section form button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .projects-section  form button:hover {
+            background-color: #0056b3;
+        }
+
+        .projects-section h2 {
+            margin-top: 20px;
+            font-size: 24px;
+            color: #007bff;
+        }
+
+        .projects-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .projects-section ul li {
+            background: #f1f1f1;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .projects-section p {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+{% endblock %}
+{% block title %}Особистий кабінет вчителя{% endblock %}
+{% block content %}
+    <div class="projects-section-header">
+        <a class="header-text" href="{% url 'teachers:group_detail' group_id=group.id %}">Вернутись назад</a>
+        <p class="time">{{ current_date|date:"j" }} {{ current_date|ukr_month }}</p>
+    </div>
+    <div class="projects-section-header">
+        <p>Переглянути оцінки</p>
+    </div>
+    <form method="post" action="{% url 'teachers:view_grades' group.id %}">
+        {% csrf_token %}
+        <label for="subject">Оберіть предмет:</label>
+        <select name="subject" id="subject">
+            {% for subject in subjects %}
+                <option value="{{ subject.id }}">{{ subject.name }}</option>
+            {% endfor %}
+        </select>
+    
+        <label for="student">Оберіть студента:</label>
+        <select name="student" id="student">
+            {% for student in students %}
+                <option value="{{ student.id }}">{{ student.first_name }} {{ student.last_name }}</option>
+            {% endfor %}
+        </select>
+    
+        <button type="submit">Переглянути оцінки</button>
+    </form>
+        {% if selected_student %}
+        <h2>Оцінки студента <u>{{ selected_student.first_name }} {{ selected_student.last_name }}</u> <br> По предмету {{ selected_subject.name }}</h2>
+        <ul>
+            {% for grade in grades %}
+                <li>{{ grade.assignment.name }}: {{ grade.grade }}</li>
+            {% endfor %}
+        </ul>
+        {% if average_grade %}
+            <p>Середній бал: {{ average_grade }}</p>
+        {% else %}
+            <p>Поки немає оцінок.</p>
+        {% endif %}
+    {% endif %}
+{% endblock %}

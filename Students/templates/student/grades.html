@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        .container {
+            width: 100%;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .average {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #dff0d8;
+            border: 1px solid #d6e9c6;
+            color: #3c763d;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Оцінки</h1>
+
+        <div class="average">
+            <p><strong>Середня оцінка за всі предмети:</strong> 
+                {% if average_grade_all_subjects %}
+                  {{ average_grade_all_subjects }}
+                {% endif %}
+            </p>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Предмет</th>
+                    <th>Середня оцінка</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for subject in subjects_grades %}
+                <tr>
+                    <td>{{ subject.assignment__subject__name }}</td>
+                    <td>{{ subject.average_grade }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Предмет</th>
+                    <th>Назва завдання</th>
+                    <th>Оцінка</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for grade in grades %}
+                <tr>
+                    <td>{{ grade.assignment.subject.name }}</td>
+                    <td>{{ grade.assignment.name }}</td>
+                    <td>{{ grade.grade }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

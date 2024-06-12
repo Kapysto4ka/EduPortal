@@ -1,0 +1,93 @@
+{% extends "teacher/template.html" %}
+{% load custom_filters %}
+{% block style %}<style>
+    .projects-section {
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        overflow-y: auto; 
+    }
+    .projects-section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    .header-text {
+        color: #4A90E2;
+        text-decoration: none;
+    }
+    .time {
+        color: #888888;
+    }
+    .assignments-section, .students-section {
+        margin-bottom: 20px;
+    }
+    h2 {
+        font-size: 1.2rem;
+        color: #333333;
+        margin-bottom: 10px;
+    }
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    li {
+        background-color: #f9f9f9;
+        margin-bottom: 10px;
+        padding: 10px;
+        border-radius: 4px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    li a {
+        text-decoration: none;
+        color: #4A90E2;
+    }
+    .projects-section-content button {
+        background-color: #4A90E2;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 10px 20px;
+        cursor: pointer;
+        margin-top: 20px;
+    }
+</style>{% endblock %}
+{% block title %}Деталі групи{% endblock %}
+{% block content %}
+<div class="projects-section-header">
+    <a class="header-text" href="/teacher">Вернутись назад</a>
+    <p class="time">{{ current_date|date:"j" }} {{ current_date|ukr_month }}</p>
+</div>
+<div class="projects-section-header">
+    <p>{{ group.name }}</p>
+</div>
+<div class="projects-section-content">
+    <div class="assignments-section">
+        <h2>Завдання</h2>
+        <ul>
+            {% for assignment in assignments %}
+            <li>
+                <a href="{% url 'teachers:assignment_detail' assignment.id %}">{{ assignment.name }} | {{ assignment.subject.name }}</a>
+                 {{ assignment.description }}
+            </li>
+            {% endfor %}
+        </ul>
+        <button onclick="location.href='{% url 'teachers:view_grades' group.id %}'">Переглянути оцінки</button>
+        <button onclick="location.href='{% url 'teachers:create_assignment' group_id=group.id %}'">Створити завдання</button>
+    </div>
+    
+    <div class="students-section">
+        <h2>Учні</h2>
+        <ul>
+            {% for student in students %}
+            <li>{{ student.first_name }} {{ student.last_name }}</li>
+            {% endfor %}
+        </ul>
+        <button onclick="location.href='{% url 'teachers:attendance_overview' group.id %}'">Переглянути відвідуваність</button>
+    </div>
+</div>
+{% endblock %}

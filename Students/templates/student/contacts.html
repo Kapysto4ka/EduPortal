@@ -1,0 +1,80 @@
+{% load static %}
+{% load custom_filters %}
+<div>
+    <div class="projects-section-header">
+        <p>Контакти</p>
+        <p class="time">{{ current_date|date:"j" }} {{ current_date|ukr_month }}</p>
+    </div>
+    <iframe
+        id = 'map'
+        width="600"
+        height="450"
+        style="border:0"
+        loading="lazy"
+        allowfullscreen
+        src="https://www.openstreetmap.org/export/embed.html?bbox=24.732905801646834,48.94247956665236,24.734905801646834,48.94447956665236&layer=mapnik&marker=48.94347956665236,24.733905801646834">
+    </iframe>
+    <div class="contacts">
+        <div class="contact-block">
+            <h3>Адреса:</h3>
+            <p>вул. Вовчинецька, 223<br>м. Івано-Франківськ, 76006</p>
+        </div>
+        <div class="contact-block">
+            <h3>Приймальня директора:</h3>
+            <p>📞 (0342) 78-30-46<br>📠 (0342) 78-30-22<br>✉️ ifkep@ukr.net</p>
+        </div>
+        <div class="contact-block">
+            <h3>Приймальна комісія:</h3>
+            <p>📞 (0342) 56-57-00<br>📞 (068) 826-35-46<br>📞 (099) 375-47-83</p>
+        </div>
+        <div class="contact-block">
+            <h3>Соціальні мережі:</h3>
+            <p>
+                📘 <a href="https://www.facebook.com/groups/147588292590158" class="social-link">Офіційна сторінка ВСП 'ФКЕП' ІФНТУНГ</a><br>
+                📘 <a href="https://t.me/joinchat/VARJD-fWoAGafVyU" class="social-link">Канал в Telegram</a><br>
+                📘 <a href="https://www.facebook.com/groups/1887602178056159" class="social-link">Асоціація випускників</a><br>
+                📞 <a href="https://invite.viber.com/?g2=AQB575H0iancyFBTUchjx6kBErmmt0QuSLv9SV7Oiid0DAKvCjXOm4aQQjrB2qMs" class="social-link">Чат вступної кампанії</a>
+            </p>
+        </div>
+    </div>
+</div>
+<style>
+    #map {
+        height: 500px;
+        width: 100%;
+        padding-bottom: 30px;
+    }
+
+    .contacts {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .contact-block {
+        background-color: #f5f8fa;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        flex: 1;
+        min-width: 200px;
+    }
+
+    .contact-block h3 {
+        margin-top: 0;
+    }
+
+    .contact-block p {
+        margin: 5px 0;
+    }
+    .social-link {
+    text-decoration: none; 
+    color: inherit; 
+    }
+
+    .social-link:hover {
+        text-decoration: underline;
+        color: inherit; 
+    }
+</style>

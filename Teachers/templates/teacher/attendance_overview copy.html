@@ -1,0 +1,102 @@
+{% extends "teacher/template.html" %}
+{% load static %}
+{% load custom_filters %}
+{% block style %}<style>
+    .attendance-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .attendance-table th, .attendance-table td {
+        border: 1px solid #000;
+        padding: 5px;
+        text-align: center;
+    }
+    .attendance-table th {
+        background-color: #f2f2f2;
+    }
+    .projects-section-content {
+        overflow-y: auto;
+    }
+    </style>
+{% endblock %}
+{% block title %}Відвідуваність групи{% endblock %}
+{% block content %}
+    <div class="projects-section-header">
+        <a class="header-text" href="javascript:history.back()">Вернутись назад</a>
+        <p class="time">{{ current_date|date:"j" }} {{ current_date|ukr_month }}</p>
+    </div>
+    <div class="projects-section-header">
+        <p>{{ group.name }}</p>
+    </div>
+    <div class="projects-section-content">
+        <form method="post">
+            {% csrf_token %}
+            <label for="month">Виберіть місяць:</label>
+            <input type="month" id="month" name="month" value="{{ selected_month }}">
+            <label for="subject">Виберіть предмет:</label>
+            <select id="subject" name="subject">
+                {% for subject in subjects %}
+                    <option value="{{ subject.id }}" {% if subject.id|stringformat:"s" == selected_subject_id|stringformat:"s" %}selected{% endif %}>{{ subject.name }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Переглянути</button>
+        </form>
+
+        <h2>Відвідуваність</h2>
+        <table class="attendance-table">
+            <thead>
+                <tr>
+                    <th>ПІБ</th>
+                    {% for day in days_in_month %}
+                        <th>{{ day }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                    <tr>
+                        <td>{{ student.first_name }} {{ student.last_name }}</td>
+                        {% for day in days_in_month %}
+                            <td>
+                                {% if day in attendance_data|get_item:student.id %}
+                                    {% with attendance=attendance_data|get_item:student.id|get_item:day %}
+                                        {{ attendance|default:"" }}
+                                    {% endwith %}
+                                {% else %}
+                                    Відсутній
+                                {% endif %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="projects-section-content">
+        <h2>Додати відвідуваність</h2>
+        <form method="post" action="{% url 'teachers:add_attendance' %}">
+            {% csrf_token %}
+            <label for="student">Студент:</label>
+            <select id="student" name="student">
+                {% for student in students %}
+                    <option value="{{ student.id }}">{{ student.first_name }} {{ student.last_name }}</option>
+                {% endfor %}
+            </select>
+        
+            <label for="subject">Предмет:</label>
+            <select id="subject" name="subject">
+                {% for subject in subjects %}
+                    <option value="{{ subject.id }}">{{ subject.name }}</option>
+                {% endfor %}
+            </select>
+        
+            <label for="date">Дата:</label>
+            <input type="date" id="date" name="date">
+        
+            <label for="present">Присутній:</label>
+            <input type="checkbox" id="present" name="present" value="present">
+        
+            <button type="submit">Додати</button>
+        </form>                    
+    </div>
+    {% endblock %}
